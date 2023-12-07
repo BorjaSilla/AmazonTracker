@@ -88,6 +88,9 @@ st.sidebar.markdown(
     unsafe_allow_html=True
 )
 
+
+
+
 st.sidebar.header('Filters🔎')
 
 # Fetch unique categories and days from MongoDB
@@ -157,7 +160,7 @@ else:
 
 total_records = len(filtered_data)
 # Display total records in the sidebar as small blue text
-st.sidebar.markdown(f'<div style="color: #33C5FF; font-size: 12px;">Total Records: {total_records}</div>', unsafe_allow_html=True)
+st.sidebar.markdown(f'<div style="color: #33C5FF; font-size: 12px;">Selected Records: {total_records}</div>', unsafe_allow_html=True)
 
 # KPIs
 avg_price = filtered_data["price"].mean()
@@ -276,28 +279,6 @@ fig_bar.update_layout(width=900)
 st.plotly_chart(fig_bar)
 
 
-# Calculate the range of ratings for the filtered data
-filtered_rating_range = filtered_data["rating"].max() - filtered_data["rating"].min()
-
-# Calculate the number of bins such that each bin represents one rating for the filtered data
-filtered_num_bins_rating = int(filtered_rating_range) + 1
-
-# Apply the rating filter to filtered_data
-filtered_data = filtered_data[(filtered_data['rating'] > 0)]  # Filter out data points with a rating of 0
-
-# Create a histogram for the rating distribution with bins of size 0.1
-fig_filtered_rating_distribution = px.histogram(
-    filtered_data, 
-    x="rating", 
-    nbins=50,  # Set the number of bins to represent 0.1 increments
-    title=f"Rating Distribution for {selected_category} on {selected_day}",
-    range_x=[0, 5.5]  # Set the x-axis range from 0 to 5
-)
-# Set the width to 900
-fig_filtered_rating_distribution.update_layout(width=900, height=600)
-st.plotly_chart(fig_filtered_rating_distribution)
-
-
 # Filter out data points with a rating of 0
 filtered_data_scatter = filtered_data[filtered_data['price'] > 0]
 
@@ -321,6 +302,30 @@ fig_scatter.update_layout(width=900, height=700)
 # Display the plot in Streamlit app
 st.plotly_chart(fig_scatter)
 
+# Calculate the range of ratings for the filtered data
+filtered_rating_range = filtered_data["rating"].max() - filtered_data["rating"].min()
+
+# Calculate the number of bins such that each bin represents one rating for the filtered data
+filtered_num_bins_rating = int(filtered_rating_range) + 1
+
+# Apply the rating filter to filtered_data
+filtered_data = filtered_data[(filtered_data['rating'] > 0)]  # Filter out data points with a rating of 0
+
+# Create a histogram for the rating distribution with bins of size 0.1
+fig_filtered_rating_distribution = px.histogram(
+    filtered_data, 
+    x="rating", 
+    nbins=50,  # Set the number of bins to represent 0.1 increments
+    title=f"Rating Distribution for {selected_category} on {selected_day}",
+    range_x=[0, 5.5]  # Set the x-axis range from 0 to 5
+)
+# Set the width to 900
+fig_filtered_rating_distribution.update_layout(width=900, height=600)
+st.plotly_chart(fig_filtered_rating_distribution)
+
+
+
+
 # Reviews Over Time (Line chart)
 filtered_reviews_data = df.copy()
 
@@ -341,3 +346,110 @@ fig_reviews_over_time = px.line(
 # Set the width to 900
 fig_reviews_over_time.update_layout(width=900, height=500)
 st.plotly_chart(fig_reviews_over_time)  
+
+
+
+# Calculate the database size for each hour
+database_size_hourly = df.groupby(df['datetime'].dt.floor('H'))['asin'].nunique().cumsum().reset_index()
+database_size_hourly.columns = ['datetime', 'database_size']
+
+# Line chart for database size progression
+fig_database_size_hourly = px.line(
+    database_size_hourly,
+    x='datetime',
+    y='database_size',
+    title='Database Size Progression (Hourly)',
+    labels={'datetime': 'Date', 'database_size': 'Database Size'},
+)
+
+# Set the width and height in the sidebar
+fig_database_size_hourly.update_layout(width=300, height=300)
+
+# Display the database size progression line chart in the sidebar
+st.sidebar.plotly_chart(fig_database_size_hourly)
+
+# Filter data for reviews
+filtered_reviews_data = df.copy()
+
+# Apply filters to the data
+filtered_reviews_data = filtered_reviews_data[(filtered_reviews_data['datetime'].dt.date >= date_range[0]) & (filtered_reviews_data['datetime'].dt.date <= date_range[1])]
+filtered_reviews_data = filtered_reviews_data[(filtered_reviews_data['price'] >= price_range[0]) & (filtered_reviews_data['price'] <= price_range[1])]
+
+# Calculate average reviews per category per day
+avg_reviews_per_category_per_day = filtered_reviews_data.groupby(['category', filtered_reviews_data['datetime'].dt.date])['num_reviews'].mean().reset_index()
+
+# Bar chart for average reviews animated per day
+fig_avg_reviews_per_category = px.bar(
+    avg_reviews_per_category_per_day,
+    x='category',
+    y='num_reviews',
+    animation_frame='datetime',
+    title='Average Reviews per Category (Animated)',
+    labels={'num_reviews': 'Average Reviews'},
+    range_y=[0, 80000],
+)
+
+# Set the width to 900
+fig_avg_reviews_per_category.update_layout(width=900)
+
+# Display the animated bar chart in the main area
+st.plotly_chart(fig_avg_reviews_per_category)
+
+# Filter data for ratings
+filtered_ratings_data = df.copy()
+
+# Apply filters to the data
+filtered_ratings_data = filtered_ratings_data[(filtered_ratings_data['datetime'].dt.date >= date_range[0]) & (filtered_ratings_data['datetime'].dt.date <= date_range[1])]
+filtered_ratings_data = filtered_ratings_data[(filtered_ratings_data['price'] >= price_range[0]) & (filtered_ratings_data['price'] <= price_range[1])]
+
+# Calculate average ratings per category per day
+avg_ratings_per_category_per_day = filtered_ratings_data.groupby(['category', filtered_ratings_data['datetime'].dt.date])['rating'].mean().reset_index()
+
+# Bar chart for average ratings animated per day
+fig_avg_ratings_per_category = px.bar(
+    avg_ratings_per_category_per_day,
+    x='category',
+    y='rating',
+    animation_frame='datetime',
+    title='Average Ratings per Category (Animated)',
+    labels={'rating': 'Average Ratings'},
+    range_y=[0, 5.1],
+)
+
+# Set the width to 900
+fig_avg_ratings_per_category.update_layout(width=900)
+
+# Display the animated bar chart in the main area
+st.plotly_chart(fig_avg_ratings_per_category)
+
+
+
+# Filter data for prices
+filtered_prices_data = df.copy()
+
+# Apply filters to the data
+filtered_prices_data = filtered_prices_data[(filtered_prices_data['datetime'].dt.date >= date_range[0]) & (filtered_prices_data['datetime'].dt.date <= date_range[1])]
+filtered_prices_data = filtered_prices_data[(filtered_prices_data['price'] >= price_range[0]) & (filtered_prices_data['price'] <= price_range[1])]
+
+# Calculate average prices per category per day
+avg_prices_per_category_per_day = filtered_prices_data.groupby(['category', filtered_prices_data['datetime'].dt.date])['price'].mean().reset_index()
+
+# Bar chart for average prices animated per day with fixed Y-axis range
+fig_avg_prices_per_category = px.bar(
+    avg_prices_per_category_per_day,
+    x='category',
+    y='price',
+    animation_frame='datetime',
+    title='Average Prices per Category (Animated)',
+    labels={'price': 'Average Prices'},
+    range_y=[0, 300],  # Fix Y-axis range to 0-300
+)
+
+# Set the width to 900
+fig_avg_prices_per_category.update_layout(width=900)
+
+# Display the animated bar chart in the main area
+st.plotly_chart(fig_avg_prices_per_category)
+
+# Add a centered text below the chart with smaller size and 50% opacity
+st.sidebar.markdown("<h5 style='text-align: center; opacity: 0.5;'>Made by Borja SG</h5>", unsafe_allow_html=True)
