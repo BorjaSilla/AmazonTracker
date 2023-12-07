@@ -29,11 +29,14 @@ mongo_uri = st.secrets['MONGO_URI']
 
 # Connect to MongoDB
 client = MongoClient(mongo_uri)
-db = client["amazon-project"]
+db = client["amazontracker"]
 collection = db["scrape_collection"]
+print('CONNECTED')
 
 # Fetch data from MongoDB
 data = list(collection.find())
+
+print(len(data))
 
 # Convert data to DataFrame
 df = pd.DataFrame(data)
@@ -295,9 +298,6 @@ fig_filtered_rating_distribution.update_layout(width=900, height=600)
 st.plotly_chart(fig_filtered_rating_distribution)
 
 
-
-
-
 # Filter out data points with a rating of 0
 filtered_data_scatter = filtered_data[filtered_data['price'] > 0]
 
@@ -343,7 +343,7 @@ fig_reviews_over_time.update_layout(width=900, height=500)
 st.plotly_chart(fig_reviews_over_time)
 
 
-
+#ANIMATED CHART
 # Prepare data for chart
 def format_data(df: pd.DataFrame) -> dict:
     dates = df['datetime'].dt.date.unique()
@@ -369,10 +369,6 @@ total_data = format_data(df=df)
 
 # Generate timeline charts
 timeline = Timeline()
-
-
-
-# Assuming 'timeline' is already initialized and 'total_data' is your data structure
 
 for date, category_data in total_data.items():
     bar = (
@@ -463,7 +459,7 @@ with open(html_file_path, "r", encoding="utf-8") as f:
 # Display HTML content using components
 components.html(html_content, width=900, height=600, scrolling=False)
 
-
+# DATABASE SIZE CHART
 
 # Calculate the hourly count of items
 hourly_count = df.groupby(df['datetime'].dt.floor('H')).size().reset_index(name='count')
@@ -516,3 +512,6 @@ line_chart_hourly_database_size = (
 
 # Display the Pyecharts Line chart for hourly database size progression
 st_pyecharts(line_chart_hourly_database_size)
+
+
+
