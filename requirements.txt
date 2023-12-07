@@ -1,0 +1,6 @@
+pymongo==4.6.0
+pandas==1.5.3
+numpy==1.24.3
+plotly==5.9.0
+pyecharts==2.0.4
+streamlit_echarts==0.4.0
