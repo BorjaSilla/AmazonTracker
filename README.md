@@ -6,18 +6,22 @@ Track and analyze Amazon product data with ease! Explore the live demo [here](ht
 
 ## Table of Contents
 
-- [Introduction 👋🏻](#introduction)
-- [Scraping 🕸](#scraping)
-- [Features 🛠](#features)
-- [Streamlit 🚀](#streamlit)
-- [Acknowledgments 🙌](#acknowledgments)
-- [Contact 📬](#contact)
+- [Introduction](#introduction)
+- [Scraping](#scraping)
+- [Features](#features)
+- [Streamlit](#streamlit)
+  - [Filters](#filters)
+  - [Metrics](#metrics)
+  - [Plots](#plots)
+  - [Interactive Timeline](#interactive-timeline)
+- [Acknowledgments](#acknowledgments)
+- [Contact](#contact)
 
-## Introduction 👋🏻
+## Introduction
 
 Amazon Tracker is a comprehensive tool designed for scraping and tracking Amazon product data. The project includes scripts for scraping Amazon product details, storing the data in a MongoDB database, and a [Streamlit](https://amazontracker.streamlit.app/) web app for visualizing and analyzing the collected data.
 
-## Scraping 🕸
+## Scraping
 
 The scraping process involves the following steps:
 
@@ -25,28 +29,28 @@ The scraping process involves the following steps:
 2. **Data Extraction:** Extracts product details such as title, price, rating, and number of reviews from Amazon.
 3. **Data Storage:** Stores scraped data in MongoDB for efficient data retrieval and analysis.
 
-## Features 🛠
+## Features
 
 - **Streamlit Web App:** A user-friendly web app for exploring and visualizing Amazon product data.
 - **Dynamic Filtering:** Allows users to filter data based on categories, dates, prices, and more.
 - **Visualization:** Generates insightful plots and charts to help users understand trends and patterns.
 
-## Streamlit 🚀
+## Streamlit
 
-### Filters 🔎
+### Filters
 
 - **Category:** Select a specific category or choose "All records" to view data across all categories.
 - **Day:** Filter data by selecting a specific day or choose "All" to view aggregated data.
 - **Price Range:** Use a slider to set a price range for filtering products.
 - **Date Range:** Choose a date range to focus your analysis on specific time intervals.
 
-### Metrics 💹
+### Metrics
 
 - **Average Price:** Showcase the average price based on the applied filters, along with the percentage change in the last 24 hours. 💰
 - **Average Rating:** Visualize the average rating based on the applied filters, along with the percentage change in the last 24 hours. ⭐
 - **Average Number of Reviews:** Explore the average number of reviews considering the applied filters, along with the percentage change in the last 24 hours. 📝
 
-### Plots 📊
+### Plots
 
 - **Price Distribution:** Interactive histogram showcasing the distribution of product prices within the selected category and date.
 - **Average Price per Category:** Bar chart illustrating the average price for each category based on the applied filters.
@@ -54,20 +58,16 @@ The scraping process involves the following steps:
 - **Price vs. Rating Scatter Plot:** Scatter plot showcasing the relationship between product prices and ratings.
 - **Reviews Over Time:** Line chart depicting the progression of reviews over time.
 
-### Interactive Timeline ⏰
+### Interactive Timeline
 
 - **Average Category Metrics:** Animated timeline chart showing the average price, rating, and number of reviews for each category over time.
 
-## Acknowledgments 🙌
+## Acknowledgments
 
 This project serves as the final project for the Data Analytics Bootcamp at Ironhack. Special thanks to our dedicated professors and supportive teammates for their invaluable guidance and collaboration throughout this learning journey!
 
-## Contact 📬
+## Contact
 
 Feel free to reach out for any inquiries or collaborations! 
 
 - [LinkedIn](https://www.linkedin.com/in/borjasg) 🌐
-
-
-
-
