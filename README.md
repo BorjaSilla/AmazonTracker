@@ -3,6 +3,7 @@
 ![Amazon Tracker](https://i.imgur.com/nhyHXzi.png)
 
 Track and analyze Amazon product data with ease! Explore the live demo [here](https://amazontracker.streamlit.app/). 🚀
+- Video Showcase: https://youtu.be/JlmkmVLVu-M
 
 ## Table of Contents
 
